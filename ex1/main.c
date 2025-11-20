@@ -17,12 +17,21 @@ int main()
 
     insert_sensor(f, id, v, ts);
 
+    sleep(1);
     id = 2;
     v = 0.002;
     ts = time(NULL);
 
     insert_sensor(f, id, v, ts);
+
+    sleep(1);
+    id = 3;
+    v = 0.005;
+    ts = time(NULL);
+
+    insert_sensor(f, id, v, ts);
     close_db(f);
+    printf("ex1 ran successfully\n");
     return 0;
 }
 
