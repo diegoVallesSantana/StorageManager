@@ -2,7 +2,7 @@
 #include "logger.h"
 #include <stdbool.h>
 
-static bool start = false;
+static bool start = false; //extra safety
 static bool stop = false;
 
 
@@ -32,7 +32,7 @@ int insert_sensor(FILE * f, sensor_id_t id, sensor_value_t value, sensor_ts_t ts
     write_to_log_process("New sensor value inserted");
     return 0;
 }
-static bool stop = false;
+
 int close_db(FILE * f) {
     if (f==NULL){return -1;}
 

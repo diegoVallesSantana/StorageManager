@@ -24,7 +24,7 @@ int create_log_process(){
         return -1;
     }
 
-    pid_t pid = fork(); // parent gets pid  > 0 and child gets pid == 0
+    pid_t pid = fork(); // parent pid  > 0 and child pid == 0
 
     if (pid < 0) {
         fprintf(stderr, "Error: fork failed in create_log_process\n");
@@ -32,14 +32,14 @@ int create_log_process(){
     }
 
     if (pid > 0) {
-        // ---------------- PARENT PROCESS ---------------- pid >0
+        //PARENT PROCESS
         write_fd = fd[1];
         child_pid = pid;
         close(fd[0]);
         return 0;
 
     } else {
-        // ---------------- CHILD PROCESS ---------------- pid = 0
+        //CHILD PROCESS
         close(fd[1]);
 
         FILE* log = fopen("gateway.log", "a");
@@ -52,7 +52,7 @@ int create_log_process(){
 
         while (1) {
             ssize_t n = read(fd[0], buffer, sizeof(buffer)-1);
-            if (n <= 0) break; // not sure the code breaks when needed and the child reads the messages
+            if (n <= 0) break; //start by checking if this functon does what it's supposed to
             buffer[n] = '\0';
             if (buffer[n-1] == '\n') {
                 buffer[n-1] = '\0';
@@ -61,7 +61,6 @@ int create_log_process(){
                 break;
             }
 
-            // Get timestamp
             time_t t = time(NULL);
             char *timestamp = ctime(&t);
             timestamp[strlen(timestamp) - 1] = '\0';
