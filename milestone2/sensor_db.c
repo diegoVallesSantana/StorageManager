@@ -1,3 +1,8 @@
+/**
+* \author Diego
+ */
+
+
 #include "sensor_db.h"
 #include "logger.h"
 #include <stdbool.h>

@@ -1,3 +1,7 @@
+/**
+* \author Diego
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -47,27 +51,34 @@ int create_log_process(){
             fprintf(stderr, "Error: could not open log file in child create_log_process\n");
             exit(1);}
 
-        char buffer[256];
+        char buffer[300];
         int counter = 1;
 
         while (1) {
             ssize_t n = read(fd[0], buffer, sizeof(buffer)-1);
-            if (n <= 0) break; //start by checking if this functon does what it's supposed to
+            if (n <= 0) break;
             buffer[n] = '\0';
-            if (buffer[n-1] == '\n') {
-                buffer[n-1] = '\0';
-            }
-            if (strcmp(buffer, "SHUTDOWN") == 0) {
-                break;
-            }
 
-            time_t t = time(NULL);
-            char *timestamp = ctime(&t);
-            timestamp[strlen(timestamp) - 1] = '\0';
+            char *line = strtok(buffer, "\n");
 
-            fprintf(log, "%d - %s - %s\n", counter, timestamp, buffer);
-            fflush(log);
-            counter++;
+            while (line != NULL) {
+
+                // Check shutdown message
+                if (strcmp(line, "SHUTDOWN\n") == 0) {
+                    fclose(log);
+                    close(fd[0]);
+                    exit(0);
+                }
+
+                time_t t = time(NULL);
+                char *timestamp = ctime(&t);
+                timestamp[strlen(timestamp) - 1] = '\0';
+
+                fprintf(log, "%d - %s - %s\n", counter, timestamp, line);
+                fflush(log);
+                counter++;
+                line = strtok(NULL, "\n");
+            }
         }
         fclose(log);
         close(fd[0]);
